@@ -50,6 +50,10 @@ local lockedSafeMessage = "\nThere is a small safe on this desk. It is locked wi
 local unlockedSafeMessage = "\nThe safe opens with a click, revealing a key inside of the safe. Maybe this key would work for the room's door?" 
 local riemannMessage = "\nYou see a picture of a man with a fantastic beard attached to the chalk board."
 
+local TAQuestionMessage1 = "\nYou find a note with a calculus problem. It asks you to evaluate the integral from 0 to 1 of the function 3x^2-2x+1. \nYou notice a small number 1 in the corner."
+local TAQuestionMessage2 = "\nYou find a note with a calculus problem. It asks you to find the derivative of the function 2x^3-6x^2+5x-1 at x=1. \nYou notice a small number 2 in the corner."
+local TAQuestionMessage3 = "\nYou find a note with a calculus problem. It asks you to determine the critical points of the function x^4-8x^3+18x^2-12x. \nYou notice a small number 3 in the corner."
+local TAQuestionMessage4 = "\nYou find a note with a calculus problem. It is: We want to fence in a rectangular field. If we look at the field from above, \nthe cost of the vertical sides is $10/ft, the cost of the bottom is $2/ft, and the cost of the top is $7/ft. \nIf we have $700, determine the dimensions of the field that will maximize the enclosed area.. \nYou notice a small number 4 in the corner."
 
 local world = bump.newWorld()
 
@@ -312,7 +316,7 @@ local function loadQuestions()
 end
 
 local function drawRiemann() 
-  love.graphics.draw(Final_RiemannClue, 100, 100)
+  love.graphics.draw(Final_RiemannClue, 400, 100)
 end
 
 local function drawPlayer()
