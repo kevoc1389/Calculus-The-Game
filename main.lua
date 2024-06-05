@@ -80,8 +80,8 @@ local function drawBox(box, r,g,b)
   love.graphics.setColor(r,g,b,0.001)
   love.graphics.rectangle("fill", box.x, box.y, box.w, box.h)
   if showBorders then
-  	love.graphics.setColor(r,g,b)
-  	love.graphics.rectangle("line", box.x, box.y, box.w, box.h)
+    love.graphics.setColor(r,g,b)
+    love.graphics.rectangle("line", box.x, box.y, box.w, box.h)
   end
   love.graphics.setColor(100,100,100,1)
 end
@@ -200,10 +200,10 @@ local function updatePlayer(dt)
   if worldLoaded then
     local dx, dy = 0, 0
     if love.keyboard.isDown('d') then
-    	isMovingLeft = false
+      isMovingLeft = false
       dx = speed * dt
     elseif love.keyboard.isDown('a') then
-    	isMovingLeft = true
+      isMovingLeft = true
       dx = -speed * dt
     end
     if love.keyboard.isDown('s') then
@@ -221,15 +221,15 @@ end
 local function drawBoxPlayer(box)
   love.graphics.setColor(255,255,255,1)
   if isMovingLeft == true then
-  	love.graphics.draw(Final_Character_Reversed, player.x-5, player.y-15)
+    love.graphics.draw(Final_Character_Reversed, player.x-5, player.y-15)
   elseif isMovingLeft == false then
-  	love.graphics.draw(Final_Character, player.x-5, player.y-15)
+    love.graphics.draw(Final_Character, player.x-5, player.y-15)
   end
   love.graphics.setColor(255,255,255,1)
 end
 
 local function drawSpeechBox()
-  	love.graphics.rectangle('fill', 0, 600-96, 800, 96)
+    love.graphics.rectangle('fill', 0, 600-96, 800, 96)
    love.graphics.setColor(0,0,0,255)
    local chars1 = displayMessage:sub(1, current_letter)
    love.graphics.print(chars1, 50, 600-96, 0, 1, 1, 0, 0, 0, 0)
@@ -238,23 +238,23 @@ end
 
 local function speechUpdate(dt)
     --Room Door
-		if player.x > 135 and player.x < 215 and player.y > 105 and player.y < 120 and playerInteract then 
+    if player.x > 135 and player.x < 215 and player.y > 105 and player.y < 120 and playerInteract then 
       if doorKey then
         gameOver = true
       end
-			displayMessage = doorLockedMessage
-			shouldDrawSpeechBox = true
-			--TA desk
-		elseif player.x > 670 and player.x < 715 and player.y > 120 and player.y < 150 and playerInteract then
+      displayMessage = doorLockedMessage
+      shouldDrawSpeechBox = true
+      --TA desk
+    elseif player.x > 670 and player.x < 715 and player.y > 120 and player.y < 150 and playerInteract then
       isAtTADesk = true
       if unlockedTADesk then
         displayMessage = unlockedTADeskMessage
       elseif loadTADeskLock then
         displayMessage = "TA Desk Combination Lock: \nSlot 1's value: " .. TADeskComboLock[1] .. ". \nSlot 2's value: " .. TADeskComboLock[2] .. ". \nSlot 3's value: " .. TADeskComboLock[3] .. ". \nSlot 4's value: " .. TADeskComboLock[4] .. ".\nSlot you are currently changing: ".. TADeskComboLockSelectedSlot
       else
-			 displayMessage = lockedTADeskMessage
+       displayMessage = lockedTADeskMessage
       end
-			shouldDrawSpeechBox = true
+      shouldDrawSpeechBox = true
       --Safe Box with Room Key
     elseif player.x > 650 and player.x < 715 and player.y > 280 and player.y < 335 and playerInteract then
       isAtSafe = true
@@ -274,17 +274,17 @@ local function speechUpdate(dt)
       load1389 = true
       displayMessage = team1389Message
       shouldDrawSpeechBox = true
-		else
-			playerInteract = false
-			shouldDrawSpeechBox = false
+    else
+      playerInteract = false
+      shouldDrawSpeechBox = false
       isAtSafe = false
       isAtTADesk = false
       loadRiemann = false
       load1389 = false
-			time_passed = 0
-			current_letter = 0
-		end
-	time_passed = time_passed + dt
+      time_passed = 0
+      current_letter = 0
+    end
+  time_passed = time_passed + dt
     if time_passed >= time_per_letter then
       time_passed = 0
       current_letter = current_letter + 1
@@ -293,7 +293,7 @@ end
 
 local function checkSafeCode()
   if safeComboLock[1] == 8 and safeComboLock[2] == 0 and safeComboLock[3] == 5 and safeComboLock[4] == 0 then
-    doorKey = true]
+    doorKey = true
     time_passed = 0
     current_letter = 0
   end
@@ -338,16 +338,18 @@ end
 
 local function drawPlayer()
   drawBoxPlayer(player)
-end	
+end 
 
 function love.update(dt)
-	updatePlayer(dt)
-	speechUpdate(dt)
+  updatePlayer(dt)
+  speechUpdate(dt)
 end
 
 function love.draw()
-	if shouldLoadWorld and and gameOver == false then
-	   if showBorders then
+  if shouldLoadWorld and gameOver == false then
+    love.graphics.draw(Final_Background)
+    drawPlayer()
+     if showBorders then
       drawBlocks()
       end
     if isAtTADesk and unlockedTADesk then
@@ -370,20 +372,20 @@ function love.draw()
 end
 
 function love.keypressed(k)
-	if k=="escape" then love.event.quit() end
-	--change
-	if k=="space" then  
-		shouldLoadWorld = true
-		drawWorld()
-	end
-	if k=="c" then
-  	showBorders = false
+  if k=="escape" then love.event.quit() end
+  --change
+  if k=="space" then  
+    shouldLoadWorld = true
+    drawWorld()
+  end
+  if k=="c" then
+    showBorders = false
   end
   if k=="v" then
-  	showBorders = true
+    showBorders = true
   end
   if k=="e" then 
-  	playerInteract = true
+    playerInteract = true
   end
   if k=="down" then
     if isAtSafe then
