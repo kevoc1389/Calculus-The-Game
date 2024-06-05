@@ -12,6 +12,7 @@ local Final_Question_6 = love.graphics.newImage('Question6.png')
 local Final_Question_7 = love.graphics.newImage('Question7.png')
 local Final_Question_8 = love.graphics.newImage('Question8.png')
 local Final_RiemannClue = love.graphics.newImage('RiemannClue.jpg')
+local chairOfShame = love.graphics.newImage('chairofshame.jpg')
 local GameStart = love.graphics.newImage('GameStart.png')
 local GameEnd = love.graphics.newImage('GameEnd.png')
 local team1389 = love.graphics.newImage('team1389.png')
@@ -32,6 +33,7 @@ local questionNumber = 1
 local loadRiemann = false
 local gameOver = false
 local load1389 = false
+local loadChairOfShame = false
 
 --Password is 8050, found with Q1 2016 part B. Picture of Bernard Riemann as a clue
 local safeComboLock = {0, 0, 0, 0}
@@ -55,6 +57,8 @@ local lockedSafeMessage = "\nThere is a small safe on this desk. It is locked wi
 local unlockedSafeMessage = "\nThe safe opens with a click, revealing a key inside of the safe. Maybe this key would work for the room's door?" 
 local riemannMessage = "\nYou see a picture of a man with a fantastic beard attached to the chalk board."
 local team1389Message = "\nYou see a picture of our school's robotics team's logo. Can you remember our team's number? Maybe it's important..."
+local chairOfShameMessage = "\nYou see the CHAIR OF SHAME that belongs to those who cheat on exams."
+
 
 local TAQuestionMessage1 = "\nYou find a note with a calculus problem. It asks you to evaluate the integral from 0 to 1 of the function 3x^2-2x+1. \nYou notice a small number 1 in the corner."
 local TAQuestionMessage2 = "\nYou find a note with a calculus problem. It asks you to find the derivative of the function 2x^3-6x^2+5x-1 at x=1. \nYou notice a small number 2 in the corner."
@@ -274,6 +278,10 @@ local function speechUpdate(dt)
       load1389 = true
       displayMessage = team1389Message
       shouldDrawSpeechBox = true
+    elseif player.x > 80 and player.x < 130 and player.y > 115 and player.y < 175 and playerInteract then
+      loadChairOfShame = true
+      displayMessage = chairOfShameMessage
+      shouldDrawSpeechBox = true
     else
       playerInteract = false
       shouldDrawSpeechBox = false
@@ -281,6 +289,7 @@ local function speechUpdate(dt)
       isAtTADesk = false
       loadRiemann = false
       load1389 = false
+      loadChairOfShame = false
       time_passed = 0
       current_letter = 0
     end
@@ -333,7 +342,11 @@ local function drawRiemann()
 end
 
 local function draw1389()
-  love.graphics.draw(team1389, 400, 100)
+  love.graphics.draw(team1389, 200, 100)
+end
+
+local function drawChairOfShame()
+  love.graphics.draw(chairOfShame, 400, 100)
 end
 
 local function drawPlayer()
@@ -364,6 +377,9 @@ function love.draw()
     if load1389 then
       draw1389()
       end
+    if loadChairOfShame then
+      drawChairOfShame()
+    end
   elseif gameOver then
     love.graphics.draw(GameEnd)
   else 
