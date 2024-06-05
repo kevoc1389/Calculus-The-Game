@@ -12,6 +12,9 @@ local Final_Question_6 = love.graphics.newImage('Question6.png')
 local Final_Question_7 = love.graphics.newImage('Question7.png')
 local Final_Question_8 = love.graphics.newImage('Question8.png')
 local Final_RiemannClue = love.graphics.newImage('RiemannClue.jpg')
+local GameStart = love.graphics.newImage('GameStart.png')
+local GameEnd = love.graphics.newImage('GameEnd.png')
+local team1389 = love.graphics.newImage('team1389.png')
 local shouldLoadWorld = false
 local worldLoaded = false
 local showBorders = false
@@ -27,6 +30,8 @@ local loadTADeskLock = false
 local viewingQuestions = false
 local questionNumber = 1
 local loadRiemann = false
+local gameOver = false
+local load1389 = false
 
 --Password is 8050, found with Q1 2016 part B. Picture of Bernard Riemann as a clue
 local safeComboLock = {0, 0, 0, 0}
@@ -44,11 +49,12 @@ local time_passed = 0
 local current_letter = 0
 local displayMessage = ""
 local doorLockedMessage = "\nThe door is locked. Maybe Ms.Holloway has hidden a key somewhere..."
-local lockedTADeskMessage = "\nThe TA desk has a drawer, but it is locked with a combination lock. Thankfully, our TA is forgetful, \n\nso he probably wrote the code down somewhere..."
+local lockedTADeskMessage = "\nThe TA desk has a drawer, but it is locked with a combination lock. Thankfully, our TA is forgetful, \nso he probably wrote the code down somewhere...\n(press r to view lock and t to enter guess)"
 local unlockedTADeskMessage = "\nThe TA desk opens with a click. You find a few papers with calculus questions on them.\nYou can tab through these questions by using the left or right arrow key."
 local lockedSafeMessage = "\nThere is a small safe on this desk. It is locked with a 4 digit combination lock. You can press 'r' \nto view the combination lock. Press 't' to enter your guess."
 local unlockedSafeMessage = "\nThe safe opens with a click, revealing a key inside of the safe. Maybe this key would work for the room's door?" 
 local riemannMessage = "\nYou see a picture of a man with a fantastic beard attached to the chalk board."
+local team1389Message = "\nYou see a picture of our school's robotics team's logo. Can you remember our team's number? Maybe it's important..."
 
 local TAQuestionMessage1 = "\nYou find a note with a calculus problem. It asks you to evaluate the integral from 0 to 1 of the function 3x^2-2x+1. \nYou notice a small number 1 in the corner."
 local TAQuestionMessage2 = "\nYou find a note with a calculus problem. It asks you to find the derivative of the function 2x^3-6x^2+5x-1 at x=1. \nYou notice a small number 2 in the corner."
@@ -234,7 +240,7 @@ local function speechUpdate(dt)
     --Room Door
 		if player.x > 135 and player.x < 215 and player.y > 105 and player.y < 120 and playerInteract then 
       if doorKey then
-        love.event.quit()
+        gameOver = true
       end
 			displayMessage = doorLockedMessage
 			shouldDrawSpeechBox = true
@@ -252,7 +258,7 @@ local function speechUpdate(dt)
       --Safe Box with Room Key
     elseif player.x > 650 and player.x < 715 and player.y > 280 and player.y < 335 and playerInteract then
       isAtSafe = true
-      if safeKey then
+      if doorKey then
         displayMessage = unlockedSafeMessage
       elseif loadSafeLock then
         displayMessage = "Safe Combination Lock: \nSlot 1's value: " .. safeComboLock[1] .. ". \nSlot 2's value: " .. safeComboLock[2] .. ". \nSlot 3's value: " .. safeComboLock[3] .. ". \nSlot 4's value: " .. safeComboLock[4] .. ".\nSlot you are currently changing: ".. safeComboLockSelectedSlot
@@ -264,12 +270,17 @@ local function speechUpdate(dt)
       loadRiemann = true
       displayMessage = riemannMessage
       shouldDrawSpeechBox = true
+    elseif player.x > 570 and player.x < 645 and player.y > 135 and player.y < 200 and playerInteract then
+      load1389 = true
+      displayMessage = team1389Message
+      shouldDrawSpeechBox = true
 		else
 			playerInteract = false
 			shouldDrawSpeechBox = false
       isAtSafe = false
       isAtTADesk = false
       loadRiemann = false
+      load1389 = false
 			time_passed = 0
 			current_letter = 0
 		end
@@ -282,7 +293,9 @@ end
 
 local function checkSafeCode()
   if safeComboLock[1] == 8 and safeComboLock[2] == 0 and safeComboLock[3] == 5 and safeComboLock[4] == 0 then
-    doorKey = true
+    doorKey = true]
+    time_passed = 0
+    current_letter = 0
   end
 end
 
@@ -319,6 +332,10 @@ local function drawRiemann()
   love.graphics.draw(Final_RiemannClue, 400, 100)
 end
 
+local function draw1389()
+  love.graphics.draw(team1389, 400, 100)
+end
+
 local function drawPlayer()
   drawBoxPlayer(player)
 end	
@@ -329,28 +346,33 @@ function love.update(dt)
 end
 
 function love.draw()
-	if shouldLoadWorld then
-		love.graphics.draw(Final_Background)
-		drawPlayer()
-	end
-	if showBorders then
-		drawBlocks()
-	end
-  if isAtTADesk and unlockedTADesk then
-    loadQuestions()
-  end
-	if shouldDrawSpeechBox and worldLoaded then
-		drawSpeechBox()
-	end
-  if loadRiemann then
-    drawRiemann()
+	if shouldLoadWorld and and gameOver == false then
+	   if showBorders then
+      drawBlocks()
+      end
+    if isAtTADesk and unlockedTADesk then
+      loadQuestions()
+      end
+    if shouldDrawSpeechBox and worldLoaded then
+      drawSpeechBox()
+      end
+    if loadRiemann then
+      drawRiemann()
+      end
+    if load1389 then
+      draw1389()
+      end
+  elseif gameOver then
+    love.graphics.draw(GameEnd)
+  else 
+    love.graphics.draw(GameStart)
   end
 end
 
 function love.keypressed(k)
 	if k=="escape" then love.event.quit() end
 	--change
-	if k=="return" then 
+	if k=="space" then  
 		shouldLoadWorld = true
 		drawWorld()
 	end
